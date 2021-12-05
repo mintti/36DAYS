@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        //ÁÜÀÎÁÜ¾Æ¿ô
+        //ì¤Œì¸ì¤Œì•„ì›ƒ
         float scroll = Input.GetAxis("Mouse ScrollWheel") * speed;
         if (camera.fieldOfView <= 20.0f && scroll > 0)
         {
@@ -31,7 +31,7 @@ public class CameraController : MonoBehaviour
             camera.fieldOfView -= scroll;
         }
 
-        //XYÀÌµ¿
+        //XYì´ë™
         if (Input.GetMouseButton(1))
         {
             transform.Translate(Vector3.right * -Input.GetAxis("Mouse X"));

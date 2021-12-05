@@ -64,7 +64,7 @@ namespace Days.Object.Controller
                     // A sprite with polygons must exist.
                     // CreatePolygonCollider(polygonType);
                     
-                    if(false)   // not found polygon Type. 
+                    //if(false)   // not found polygon Type. 
                         return false; 
                     break;
 

@@ -1,18 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Days.Service.Type;
 
 namespace Days.Test
 {
-    /// <summary>
-    /// This use if to limit player move area.
-    /// </summary>
-    [System.Serializable]
-    public class Boundary
-    {
-        public float xMin, xMax, zMin, zMax;
-    }
-
     public class PlayerController : MonoBehaviour
     {
         private Rigidbody2D rb;
