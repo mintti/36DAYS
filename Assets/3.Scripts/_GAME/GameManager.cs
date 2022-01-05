@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Days.Common;
 using UnityEngine;
-using util = Days.Service.UtilityService;
+using util = Days.Infra.Service.UtilityService;
 
 namespace Days.Game
 {

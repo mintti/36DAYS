@@ -5,7 +5,7 @@ using UnityEngine;
 using Days.Common;
 using Days.System.Data;
 
-using util = Days.Service.UtilityService;
+using util = Days.Infra.Service.UtilityService;
 
 namespace Days.System
 {
