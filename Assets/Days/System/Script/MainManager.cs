@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
+using Days.Data.Infra;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -138,10 +138,24 @@ namespace Days.System.Script
             // -----------------------------------------
             
             // 게임 시작
-            _gameManager.Run();
+            _gameManager.PreRun();
             
             return true;
         }
+
+        #endregion The start scene related code the end.
+
+        #region This code related to the data control.
+
+        /// <summary>
+        /// 데이타 세이브
+        /// 게임 시간으로 매 하루하루 호출된다.
+        /// </summary>
+        public void Save(PlayerData playerData)
+        {
+            _dataManager.Save(playerData);
+        }
+        
 
         #endregion
     }

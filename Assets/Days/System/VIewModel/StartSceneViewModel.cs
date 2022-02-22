@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Days.System.Script;
 
-namespace Days.System.ViewModel
+namespace Days.Game.ViewModel
 {
     public class StartSceneViewModel : MonoBehaviour
     {

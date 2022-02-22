@@ -42,18 +42,43 @@ namespace Days.Game.OS.Script
         /// </summary>
         private bool Init()
         {
-            _scheduler = gameObject.AddComponent<Scheduler>();
-            _scheduler.Init(this);
-
-            _timer = gameObject.AddComponent<Timer>();
-            _timer.Init(this, _scheduler.TimerNotification);
+            _scheduler = this.GetComponent<Scheduler>();
+            _timer = this.GetComponent<Timer>();
             
+            
+            _scheduler.Init(this);
+            _timer.Init(this, _scheduler.TimerNotification);
+
+            
+            _scheduler.CreateTask("test", TestFunc);
+            SetSchdulerState(true);
             return true;
         }
 
-        public void ExecuteOs()
+        private void TestFunc()
         {
-            
+            Debug.Log("Run Test Function!!!!");
+        }
+        
+        public void SetSchdulerState(bool isActive)
+        {
+            if (isActive)
+            {
+                _scheduler.ActiveSchedule();
+            }
+            else
+            {
+                _scheduler.InactiveSchedule();
+            }
+        }
+        public void Run()
+        {
+            _timer.Run();
+        }
+
+        public void Stop()
+        {
+            _timer.Stop();
         }
 
         public void ExecuteCommand(string command)

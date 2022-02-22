@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
+using Days.Util.Infra;
 
 namespace Days.Game.OS.Script
 {
@@ -38,7 +40,7 @@ namespace Days.Game.OS.Script
         /// key     : name
         /// value   : command
         /// </summary>
-        private Dictionary<string, string> _taskDict;
+        private Dictionary<string, Del> _taskDict;
 
         /* ==============================================================
            Scheduler
@@ -53,25 +55,28 @@ namespace Days.Game.OS.Script
 
             _queue     = new List<string>();
             _alarmDict = new Dictionary<int, List<string>>();
-            _taskDict  = new Dictionary<string, string>();
+            _taskDict  = new Dictionary<string, Del>();
         }
         
         /// <summary>
         /// Scheduler Coroutine 활성화(실행)
         /// </summary>
-        private void ActiveSchedule()   => StartCoroutine(_schedule);
-        private void InactiveSchedule() => StopCoroutine(_schedule);
-
+        public void ActiveSchedule()   => StartCoroutine(_schedule);
+        public void InactiveSchedule() => StopCoroutine(_schedule);
+    
         /// <summary>
         /// SCHEDULE
         /// - 큐에 태스크가 쌓이면 순서대로 처리합니다.
         /// </summary>
         private IEnumerator Schedule()
         {
+            yield return null;
+            
             while (true)
             {
-                yield return new WaitUntil(() => _queue.Count > 0);
-                _osManager.ExecuteCommand(_taskDict[_queue[0]]);
+                yield return new WaitUntil(() => _queue.Count > 0); 
+                _taskDict[_queue[0]]();
+                //_osManager.ExecuteCommand(_taskDict[_queue[0]]);
                 _queue.RemoveAt(0);
             }
         }
@@ -79,9 +84,55 @@ namespace Days.Game.OS.Script
         /* ==============================================================
            Task State Managing
         ============================================================== */
+
+        public void AddTask(string tkName, Del del)
+        {
+            if (!_taskDict.ContainsKey(tkName))
+            {
+                _taskDict.Add(tkName, del);
+            }
+        }
+        public void CreateTask(string tkName, Del del)
+        {
+            AddTask(tkName, del);
+            _queue.Add(tkName);
+        }
+
+        /* ==============================================================
+           Alarm Managing
+            - 태스크를 주기적으로 실행하는 알람입니다.
+            - 설정한 주기마다 스케쥴러 큐에 올라갑니다.
+        ============================================================== */
+        /// <summary>
+        /// 
+        /// </summary>
+        public void CreateAlarm(string tkName, Del del, string command, ushort interval)
+        {
+            // Add Task
+            AddTask(tkName, del);
+            
+            // Add Alarm
+            if (_alarmDict.ContainsKey(interval))
+            {
+                _alarmDict[interval].Add(tkName);
+            }
+            else
+            {
+                _alarmDict.Add(interval, new List<string>(){tkName});
+            }
+        }
+
+        public void RemoveAlarm(string tkName)
+        {
+            _taskDict.Remove(tkName);
+            var key = _alarmDict.FirstOrDefault(x => x.Value.Any(v => v == tkName) ).Key;
+            _alarmDict[key].Remove(tkName);
+        }
+        
         
         /// <summary>
         /// The notification about increased 1 second in timer.
+        ///  - 매 초 마다 알람 주기 확인, raise at the scheduler queue.
         /// </summary>
         public void TimerNotification()
         {
@@ -91,33 +142,6 @@ namespace Days.Game.OS.Script
             {
                 _alarmDict[sec].ForEach(tn => _queue.Add((tn)));
             }
-        }
-        
-
-        /* ==============================================================
-           Alarm Managing
-        ============================================================== */
-        public void CreateAlarm(string name, string command, ushort interval)
-        {
-            // Add Task
-            _taskDict.Add(name, command);
-            
-            // Add Alarm
-            if (_alarmDict.ContainsKey(interval))
-            {
-                _alarmDict.Add(interval, new List<string>(){name});
-            }
-            else
-            {
-                _alarmDict[interval].Add(name);
-            }
-        }
-
-        public void RemoveAlarm(string name)
-        {
-            _taskDict.Remove(name);
-            var key = _alarmDict.FirstOrDefault(x => x.Value.Any(v => v ==name) ).Key;
-            _alarmDict[key].Remove(name);
         }
     }
 }

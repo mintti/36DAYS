@@ -12,6 +12,8 @@ namespace Days.Game.Sciprt
 {
     public class GameService : MonoBehaviour
     {
+        
+        #region 게임 세팅 관련 함수
         /// <summary>
         /// 게임에서 사용자가 다음 날로 넘어가는 경우, 아래의 내용을 설정하고 저장합니다.
         /// - 게임 상 다음 날로 넘어가는 경우 특정한 설정이 필요한 경우
@@ -22,11 +24,10 @@ namespace Days.Game.Sciprt
             try
             {
                 // Set Game Data About Next Day
-                playerData.Day++;
-            
+                playerData.UpdateDay();
+                
                 // Create Random Key
-                Random random = new Random();
-                playerData.KeyCode = random.Next().ToString();
+                playerData.KeyCode = CreateKeyCode();
             }
             catch (Exception e)
             {
@@ -37,8 +38,14 @@ namespace Days.Game.Sciprt
             
             return playerData;
         }
+
+        private string CreateKeyCode()
+        {
+            Random random = new Random();
+            return random.Next().ToString();
+        }
         
-        
+        // ================================================================================================
         /// <summary>
         /// 앞서 PreAutomation 중 생성된 키 값을 기반으로 게임 내부 데이타를 설정합니다.
         /// </summary>
@@ -46,9 +53,33 @@ namespace Days.Game.Sciprt
         {
             // Create Event
             
+            
             // Execute Stage Setting
             
             return true;
+        }
+
+        private void CreateEvent()
+        {
+            
+        }
+
+        private void ExecuteStageSetting()
+        {
+            
+        }
+        #endregion
+
+        #region 게임 진행 관련 함수
+
+        public bool CheckExpiration(GameData gameData)
+        {
+            return gameData.Time % gameData.TimeCycle == 0;
+        }
+        #endregion
+        public GameData InitialData()
+        {
+            return new GameData() { Time = 0, TimeCycle = 10};
         }
         
     }
