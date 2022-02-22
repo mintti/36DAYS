@@ -1,0 +1,5 @@
+﻿namespace Days.Util.Infra
+{
+    
+    
+}

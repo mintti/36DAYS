@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Days.Service.Type;
+using Days.aa.Infra;
 
 namespace Days.Test
 {

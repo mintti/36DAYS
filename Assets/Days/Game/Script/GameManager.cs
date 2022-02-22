@@ -1,0 +1,162 @@
+using System.Collections;
+using System.Collections.Generic;
+using Days.Data.Infra;
+using Days.Game.Object.Infra;
+using Days.Game.OS.Script;
+using Days.System.Script;
+using UnityEngine;
+using util = Days.Util.Script.UtilityService;
+
+
+namespace Days.Game.Sciprt
+{
+    public class GameManager : MonoBehaviour
+    {
+        private MainManager _mainManager;
+        private GameService _gameService;
+        private OsManager _osManager;
+        private UIManager _uiManager;
+
+        // 복제된 사용자 정보
+        private PlayerData _playerData;
+        private PlayerData PlayerData
+        {
+            get => _playerData;
+            set
+            {
+                _playerData = value; 
+                _uiManager.UpdatePlayerDataView(_playerData);
+            }
+        }
+        
+        // 현제 게임 데이타 
+        private GameData _currentGameData;
+
+        private GameData CurrentGameData
+        {
+            get => _currentGameData;
+            set
+            {
+                // 하단 dummy로 옮겨짐
+                // _uiManager.UpdateGameDataView(_currentGameData);
+                _currentGameData = value;
+            }
+        }
+        
+        public bool Init(MainManager mainManager)
+        {
+            _mainManager = mainManager;
+            _gameService = GetComponentInChildren<GameService>();
+            _osManager = GetComponentInChildren<OsManager>();
+            _uiManager = GetComponentInChildren<UIManager>();
+            
+            
+            // os 
+            if (!_osManager.ExecuteOsManager(this))
+            {
+                Debug.Log("Failed to initialize os.");
+            }
+            _osManager.GetScheduler().CreateAlarm("1Tick", Increase, "", 1);
+            
+            
+            // ui
+            if (!_uiManager.ExecuteManager(this))
+            {
+                Debug.Log("Failed to initialize ui.");
+            }
+            
+            
+            // data
+            PlayerData = _mainManager.GetDataManager().GetPlayerData();
+
+            
+            // Update Default View 
+            _uiManager.UpdatePlayerDataView(_playerData);
+            _uiManager.UpdateGameDataView(_currentGameData);
+
+            Debug.Log("Game Setting Complete.");
+            return true;
+        }
+
+        
+        
+        #region 게임 구동 관련 
+        
+        /// <summary>
+        /// 게임 구동 전 세팅
+        /// </summary>
+        public async void PreRun()
+        {
+            // Game Data 초기화
+            CurrentGameData = _gameService.InitialData();
+            
+            // 키 값에 따른 이벤트 생성 및 스테이지에 배치
+            if (!_gameService.ExecuteGameSetting())
+            {
+                util.PrintErrorLog("[GAME] Failed to execute game setting.");
+            }
+            
+            //  이벤트 부여
+            
+            
+            // 실행
+            Run();
+        }
+        
+        /// <summary>
+        /// 게임 구동
+        /// </summary>
+        private void Run()
+        {
+            Debug.Log("Run.");
+
+            // 타이머 실행
+            _osManager.Run();
+        }
+
+        /// <summary>
+        /// Timer Expire 
+        /// </summary>
+        public void Stop()
+        {
+            Debug.Log("Stop.");
+            
+            _osManager.Stop();
+            
+            var playerDataCopy = PlayerData;
+            
+            // 데이타 생성
+            playerDataCopy = _gameService.PreAutomation(playerDataCopy);
+            
+            // 데이타 저장
+            _mainManager.Save(playerDataCopy);
+            
+            //재개
+            PlayerData = playerDataCopy;
+            Invoke(nameof(PreRun),5 );
+        }
+        
+        #endregion
+
+        #region 게임 상태 업데이트
+
+        /// <summary>
+        /// 1초 증가할 때마다 실행
+        /// </summary>
+        private void Increase()
+        {
+            CurrentGameData.UpdateTime();
+            // dummy
+            _uiManager.UpdateGameDataView(_currentGameData);
+            
+            if (_gameService.CheckExpiration(CurrentGameData))
+            {
+                // 하루 사이클 완료
+                Stop();
+            }
+        }
+
+        #endregion
+        }
+    }
+}
