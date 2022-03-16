@@ -1,9 +1,28 @@
-﻿namespace Days.Game.Object.Infra
+﻿using UnityEngine;
+
+namespace Days.Game.Object.Infra
 {
-    public class Object
+    public class ObjectInfo
     {
-        public ushort Hp;
-        public ushort Power;
-        public ushort Speed;
+        public ushort Index { get; set; }
+        public string Name { get; set; }
+        public State State { get; set; }
+        public Character Character { get; set; }
+        public Weapon Weapon { get; set; }
+        
+        public ObjectState ObjectState { get; set; }
+
+
+        public void Attack()
+        {
+            
+        }
+
+        public void Hit()
+        {
+            
+        }
+        
+          
     }
 }

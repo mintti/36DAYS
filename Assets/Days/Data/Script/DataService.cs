@@ -13,7 +13,7 @@ namespace Days.Data.Script
             if (true) // 기존 플레이어 데이터가 존재하지 않는 경우, 기본 데이타 설정
             {
                 Debug.Log("Crate player data.");
-                return new PlayerData
+                return new PlayerData()
                 {
                     Day = 0,
                     KeyCode = "...."

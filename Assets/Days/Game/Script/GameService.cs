@@ -5,6 +5,7 @@ using Days.Data.Infra;
 using UnityEngine;
 
 using Days.Game.Infra;
+using Days.Resource.Model;
 using Random = System.Random;
 using util = Days.Util.Script.UtilityService;
 
@@ -82,5 +83,20 @@ namespace Days.Game.Sciprt
             return new GameData() { Time = 0, TimeCycle = 10};
         }
         
+        /*==============================================================
+                                    Dungeon
+        ==============================================================*/
+
+        public ushort CreateDungeonKey()  // input Keys..
+        {
+
+            return 0;
+        }
+        public List<Tuple<ushort, byte>> CreateDungeonEvent(DungeonModel dungeonModel)
+        {
+            List<Tuple<ushort, byte>> events = new List<Tuple<ushort, byte>>();
+
+            return events;
+        }
     }
 }

@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Days.Game.Object.Infra;
-using Days.Util.Infra;
 
 
 namespace Days.Data.Infra
@@ -16,14 +14,9 @@ namespace Days.Data.Infra
         public ushort Time { get; set; }
         public ushort TimeCycle { get; set; }
 
-        public void UpdateTime() => ++Time;
+        public void UpdateTime() => ++Time; 
 
         #endregion
 
-        #region Party Infomation
-
-        public Party[] Party { get; set; }
-
-        #endregion
     }
 }

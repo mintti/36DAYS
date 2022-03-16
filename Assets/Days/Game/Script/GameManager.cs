@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Days.Data.Infra;
 using Days.Game.Object.Infra;
 using Days.Game.OS.Script;
 using Days.System.Script;
 using UnityEngine;
+using UnityEngine.UI;
+using static Days.Resource.Resource;
 using util = Days.Util.Script.UtilityService;
-
 
 namespace Days.Game.Sciprt
 {
@@ -28,6 +31,8 @@ namespace Days.Game.Sciprt
                 _uiManager.UpdatePlayerDataView(_playerData);
             }
         }
+
+        public PlayerData GetPlayerData() => _playerData; // Dummy
         
         // 현제 게임 데이타 
         private GameData _currentGameData;
@@ -146,9 +151,15 @@ namespace Days.Game.Sciprt
         private void Increase()
         {
             CurrentGameData.UpdateTime();
+            
             // dummy
             _uiManager.UpdateGameDataView(_currentGameData);
             
+            
+            // 던전에 들어간 파티 정보 정보 업데이트
+            PlayerData.PartyList?.ForEach(x => x.Advance());
+            PlayerData.PartyList?.Where(x=>x.State == PartyState.ARRIVAL).ToList().ForEach(x=> ReturnPartyDungeon(x));
+
             if (_gameService.CheckExpiration(CurrentGameData))
             {
                 // 하루 사이클 완료
@@ -157,6 +168,83 @@ namespace Days.Game.Sciprt
         }
 
         #endregion
+
+        #region Unit / Party / Dungeon
+        /*==============================================================
+                                     Unit
+        ==============================================================*/ 
+        public void CreateUnit(ObjectInfo unit)
+        {
+            PlayerData.UnitList.Add(unit);
         }
+        
+        
+        /*==============================================================
+                                    Dungeon
+        ==============================================================*/ 
+        /// <summary>
+        /// 던전에 유닛을 투입합니다.
+        /// </summary>
+        public void SendPartyDungeon(List<byte> unitsIndex, byte dungeonIndex, ushort goalLenght)
+        {
+            // 파티 정보를 생성하여 플레이어 데이터에 추가
+            PlayerData.PartyList.Add(
+                new Party(this)
+                {
+                    Key = _gameService.CreateDungeonKey(),
+                    DungeonIndex = dungeonIndex,
+                    UnitsIndex = unitsIndex,
+                    Length = 0,
+                    GoalLength = goalLenght,
+                    State = PartyState.DEFAULT,
+                    //Events = _gameService.CreateDungeonEvent(DungeonResources[dungeonIndex]),
+                }
+            );
+            
+            // 유닛들의 상태 파티 상태로 변경
+            unitsIndex.ForEach(index => PlayerData.UnitList[index].ObjectState = ObjectState.PARTY);
+            
+        }
+
+        /// <summary>
+        /// 파티가 던전에서 돌아옵니다.
+        /// </summary>
+        public void ReturnPartyDungeon(Party party)
+        {
+            var state = party.State;
+
+            switch(state)
+            {
+                case PartyState.ARRIVAL :
+                    // 보상
+                    break;
+                case PartyState.RETREAT :
+                    // 일부 보상 및 패널티
+                    break;
+                case PartyState.DIE:
+                    // 죽음
+                    break;
+            }
+            
+            // 파티에서 돌아온 유닛 대기 상태로 업데이트
+            foreach (var index in party.UnitsIndex)
+            {
+                var objStt = PlayerData.UnitList[index].ObjectState;
+                ObjectInfo unit;
+                // IF, 죽은 상태가 아닐때만 업데이트
+                if (objStt != ObjectState.DIE)
+                {
+                    unit = PlayerData.UnitList[index];
+                    
+                    unit.ObjectState = ObjectState.WAIT;
+                    
+                    Debug.Log($"{unit.Name} state is {unit.State.ToString()}");
+                }
+            }
+
+            PlayerData.PartyList.Remove(party);
+        }
+
+        #endregion
     }
 }
