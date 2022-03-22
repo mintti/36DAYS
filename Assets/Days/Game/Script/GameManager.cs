@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Days.Data.Infra;
+using Days.Data.Script;
 using Days.Game.Object.Infra;
 using Days.Game.OS.Script;
 using Days.System.Script;
@@ -11,7 +12,7 @@ using UnityEngine.UI;
 using static Days.Resource.Resource;
 using util = Days.Util.Script.UtilityService;
 
-namespace Days.Game.Sciprt
+namespace Days.Game.Script
 {
     public class GameManager : MonoBehaviour
     {
@@ -173,8 +174,9 @@ namespace Days.Game.Sciprt
         /*==============================================================
                                      Unit
         ==============================================================*/ 
-        public void CreateUnit(ObjectInfo unit)
+        public void CreateUnit(ObjectModel unitModel)
         {
+            var unit = _gameService.ConvertModelToInto(unitModel);
             PlayerData.UnitList.Add(unit);
         }
         
@@ -191,7 +193,7 @@ namespace Days.Game.Sciprt
             PlayerData.PartyList.Add(
                 new Party(this)
                 {
-                    Key = _gameService.CreateDungeonKey(),
+                    Key = GameService.CreateDungeonKey(),
                     DungeonIndex = dungeonIndex,
                     UnitsIndex = unitsIndex,
                     Length = 0,

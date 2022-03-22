@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Days.Data.Script;
+using UnityEngine;
 
 namespace Days.Game.Object.Infra
 {
@@ -10,9 +11,14 @@ namespace Days.Game.Object.Infra
         public Character Character { get; set; }
         public Weapon Weapon { get; set; }
         
+        public CurrentState CurrentState { get; set; }
+        
         public ObjectState ObjectState { get; set; }
 
-
+        public void ComputeState()
+        {
+        }
+        
         public void Attack()
         {
             

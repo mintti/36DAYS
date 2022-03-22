@@ -6,9 +6,10 @@ using Days.Data.Infra;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-using Days.Game.Sciprt;
+using Days.Game.Script;
 using Days.Game.OS.Script;
 using Days.Data.Script;
+using Days.Resource;
 using util = Days.Util.Script.UtilityService;
 
 namespace Days.System.Script

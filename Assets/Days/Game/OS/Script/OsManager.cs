@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Days.Game.Sciprt;
+using Days.Game.Script;
 using UnityEngine;
 
 using util = Days.Util.Script.UtilityService;

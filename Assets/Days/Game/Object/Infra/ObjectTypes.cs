@@ -12,15 +12,27 @@ namespace Days.Game.Object.Infra
     }
     public class State
     {
+        /*==============================================================
+                                    기본 스텟
+        ==============================================================*/ 
         public ushort Hp { get; set; }
-        public ushort CurrentHp { get; set; }
         public ushort Power { get; set; }
         public ushort Speed { get; set; }
         
+        /*==============================================================
+                                    부가 스텟
+        ==============================================================*/ 
         public byte AttackSpeed { get; set; }
         public byte Evasion { get; set; }
         public byte Guard { get; set; }
         public byte MagicGuard { get; set; }
+
+
+        public State()
+        {
+            
+        }
+
     }
 
     public class Weapon
@@ -33,9 +45,38 @@ namespace Days.Game.Object.Infra
 
     public class Character
     {
-        public byte Index { get; set; }
+        /// <summary>
+        /// 직업이 가지는 기본 스텟
+        /// </summary>
         public State BaseState { get; set; }
         
+        /// <summary>
+        /// 무기가 가지는 기본 공격력
+        /// </summary>
+        public ushort Damage { get; set; }
+        
+        /// <summary>
+        /// 특수 능력치 / 특수 스킬에서 사용 가능
+        /// </summary>
+        public byte SpecialAbility { get; set; }
+
+        public Character()
+        {
+            
+        }
+
+        /// <summary>
+        /// 직업이 가지는 기본 스텟 설정
+        /// </summary>
+        public Character(ushort hp, ushort power, ushort speed)
+        {
+            BaseState = new State()
+            {
+                Hp = hp,
+                Power = power,
+                Speed = speed,
+            };
+        }
     }
     
     // Party ... 

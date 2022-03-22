@@ -2,14 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Days.Data.Infra;
+using Days.Data.Script;
 using UnityEngine;
 
 using Days.Game.Infra;
+using Days.Game.Object.Infra;
+using Days.Resource;
 using Days.Resource.Model;
 using Random = System.Random;
 using util = Days.Util.Script.UtilityService;
 
-namespace Days.Game.Sciprt
+namespace Days.Game.Script
 {
     public class GameService : MonoBehaviour
     {
@@ -72,7 +75,9 @@ namespace Days.Game.Sciprt
         #endregion
 
         #region 게임 진행 관련 함수
-
+        /*==============================================================
+                                     Game
+        ==============================================================*/
         public bool CheckExpiration(GameData gameData)
         {
             return gameData.Time % gameData.TimeCycle == 0;
@@ -84,17 +89,41 @@ namespace Days.Game.Sciprt
         }
         
         /*==============================================================
+                                        UNIT
+        ==============================================================*/
+
+        public ObjectInfo ConvertModelToInto(ObjectModel model)
+        {
+            ObjectInfo info = new ObjectInfo()
+            {
+                Index = model.Index,
+                Name = model.Name
+            };
+            
+            // 스텟 설정을 위한 정보 읽기
+            var jobInfo = ResourceManager.CharacterList[model.Job];
+            
+            
+            // 값 설정
+            info.State = jobInfo.BaseState;
+            
+            // other info ref
+            // 
+            return info;
+        }
+        
+        /*==============================================================
                                     Dungeon
         ==============================================================*/
 
-        public ushort CreateDungeonKey()  // input Keys..
+        public static ushort CreateDungeonKey()  // input Keys..
         {
 
             return 0;
         }
         public List<Tuple<ushort, byte>> CreateDungeonEvent(DungeonModel dungeonModel)
         {
-            List<Tuple<ushort, byte>> events = new List<Tuple<ushort, byte>>();
+            var events = new List<Tuple<ushort, byte>>();
 
             return events;
         }

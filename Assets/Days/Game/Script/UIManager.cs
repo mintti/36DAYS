@@ -4,7 +4,7 @@ using Days.Util.Infra;
 
 using Days.Game.ViewModel;
 
-namespace Days.Game.Sciprt
+namespace Days.Game.Script
 {
     public delegate void GameDel(GameData data);
     public delegate void PlayerDel(PlayerData data);

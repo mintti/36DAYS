@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Days.Game.Sciprt;
+using Days.Game.Script;
 using static Days.Resource.Resource;
 using Debug = UnityEngine.Debug;
 

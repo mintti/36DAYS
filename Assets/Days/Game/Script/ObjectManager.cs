@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Days.Game.Sciprt
+namespace Days.Game.Script
 {
     public class ObjectManager : MonoBehaviour
     {

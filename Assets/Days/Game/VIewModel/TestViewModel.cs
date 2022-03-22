@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Days.Data.Infra;
-using Days.Game.Sciprt;
+using Days.Game.Script;
 using UnityEngine;
 using UnityEngine.UI;
 

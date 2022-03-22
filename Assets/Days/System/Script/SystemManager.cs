@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Days.Data.Script;
-
+using Days.Resource;
 using util = Days.Util.Script.UtilityService;
 
 namespace Days.System.Script
@@ -15,8 +15,6 @@ namespace Days.System.Script
         #region Child Manager
 
         private DataManager _dataManager;
-        private ResourceManager _resourceManager;
-
         #endregion
         
         /// <summary>
@@ -31,6 +29,13 @@ namespace Days.System.Script
             if (!_systemService.Init())
             {
                 util.PrintErrorLog("Failed to initialize system.");
+                return false;
+            }
+            
+            
+            if (!_systemService.InitResourceManager())
+            {
+                util.PrintErrorLog("Failed to initialize resource manager.");
                 return false;
             }
 
