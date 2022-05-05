@@ -54,14 +54,40 @@ namespace Days.Game.Dummy
                 {
                     Index = i,
                     Name = $"Unit{i}",
-                    Job = i
+                    Job = i,
+                    CurrentState = new CurrentState()
+                    {
+                        Hp = 1,
+                        Mp = 0,
+                        Gauge = 0,
+                        Hunger = 0,
+                        Stress = 0
+                    }
                 });   
             }
         }
 
+
+        private bool _proto03Flag = false;
         public void Proto03_01()
         {
-            
+            if (_proto03Flag)
+            {
+                Debug.Log("Diactive Test Effect");
+                // 비활성화
+                _proto03Flag = false;
+                _gameManager.GetBackgroundManager().ActiveEffect("artifact/test");
+
+
+            }
+            else
+            {
+                Debug.Log("Active Test Effect");
+                // 활성화
+                _proto03Flag = true;
+                _gameManager.GetBackgroundManager().ActiveEffect("artifact/test");
+                
+            }
         }
     }
 }

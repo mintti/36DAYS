@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Days.Game.Background.Script;
 using Days.Game.Script;
 using UnityEngine;
 
@@ -34,8 +35,7 @@ namespace Days.Game.OS.Script
             }
 
             return true;
-        } 
-        
+        }
         
         /// <summary>
         /// OS 정보 초기화

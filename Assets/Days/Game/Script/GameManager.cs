@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Days.Data.Infra;
 using Days.Data.Script;
+using Days.Game.Background.Script;
 using Days.Game.Object.Infra;
 using Days.Game.OS.Script;
 using Days.System.Script;
@@ -20,7 +21,10 @@ namespace Days.Game.Script
         private GameService _gameService;
         private OsManager _osManager;
         private UIManager _uiManager;
+        private BackgroundManager _backgroundManager;
 
+        public BackgroundManager GetBackgroundManager() => _backgroundManager;
+        
         // 복제된 사용자 정보
         private PlayerData _playerData;
         private PlayerData PlayerData
@@ -34,6 +38,7 @@ namespace Days.Game.Script
         }
 
         public PlayerData GetPlayerData() => _playerData; // Dummy
+        
         
         // 현제 게임 데이타 
         private GameData _currentGameData;
@@ -55,6 +60,7 @@ namespace Days.Game.Script
             _gameService = GetComponentInChildren<GameService>();
             _osManager = GetComponentInChildren<OsManager>();
             _uiManager = GetComponentInChildren<UIManager>();
+            _backgroundManager = GetComponentInChildren<BackgroundManager>();
             
             
             // os 
@@ -63,8 +69,8 @@ namespace Days.Game.Script
                 Debug.Log("Failed to initialize os.");
             }
             _osManager.GetScheduler().CreateAlarm("1Tick", Increase, "", 1);
-            
-            
+            _osManager.GetScheduler().CreateAlarm("BG1Tick", _backgroundManager.Increase, "", 1);
+           
             // ui
             if (!_uiManager.ExecuteManager(this))
             {
@@ -79,6 +85,9 @@ namespace Days.Game.Script
             // Update Default View 
             _uiManager.UpdatePlayerDataView(_playerData);
             _uiManager.UpdateGameDataView(_currentGameData);
+            
+            // Background Manager Init
+            _backgroundManager.Init(this);
 
             Debug.Log("Game Setting Complete.");
             return true;
@@ -103,7 +112,7 @@ namespace Days.Game.Script
             }
             
             //  이벤트 부여
-            
+            _backgroundManager.ExecutePreEvent();
             
             // 실행
             Run();
@@ -127,7 +136,10 @@ namespace Days.Game.Script
         {
             Debug.Log("Stop.");
             
+            // 데이타 중지 및 초기화
             _osManager.Stop();
+            _backgroundManager.ExecutePreEvent();
+            
             
             var playerDataCopy = PlayerData;
             
@@ -156,7 +168,9 @@ namespace Days.Game.Script
             // dummy
             _uiManager.UpdateGameDataView(_currentGameData);
             
-            
+            // dummy 03
+            PlayerData.UnitList?.ForEach(x=> Debug.Log($"{x.Name} HP : {x.CurrentState.Hp}"));
+                
             // 던전에 들어간 파티 정보 정보 업데이트
             PlayerData.PartyList?.ForEach(x => x.Advance());
             PlayerData.PartyList?.Where(x=>x.State == PartyState.ARRIVAL).ToList().ForEach(x=> ReturnPartyDungeon(x));
@@ -247,6 +261,16 @@ namespace Days.Game.Script
             PlayerData.PartyList.Remove(party);
         }
 
+        #endregion
+
+        #region Event
+        /*==============================================================
+                                   Artifact
+        ==============================================================*/
+        public void ActiveArtifact(int index)
+        {
+            
+        }
         #endregion
     }
 }

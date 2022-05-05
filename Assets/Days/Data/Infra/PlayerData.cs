@@ -10,7 +10,7 @@ namespace Days.Data.Infra
         public PlayerData()
         {
             UnitList = new List<ObjectInfo>();
-            DungeonList = new List<Dungeon>();
+            DungeonList = new List<DungeonModel>();
             PartyList = new List<Party>();
         }
         /*==============================================================
@@ -26,7 +26,7 @@ namespace Days.Data.Infra
         ==============================================================*/
 
         public List<ObjectInfo> UnitList { get; set; }
-        public List<Dungeon> DungeonList { get; set; }
+        public List<DungeonModel> DungeonList { get; set; }
 
         /*==============================================================
         Dynamic Player Data

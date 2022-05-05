@@ -3,7 +3,7 @@
     /// <summary>
     /// 
     /// </summary>
-    public class Dungeon
+    public abstract class DungeonModel
     {
         public int Index { get; set; }
         public int CurrentLength { get; set; }

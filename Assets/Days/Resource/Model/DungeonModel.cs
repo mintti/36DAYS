@@ -2,7 +2,7 @@
 
 namespace Days.Resource.Model
 {
-    public abstract class DungeonModel
+    public abstract class Dungeon
     {
         public byte Index { get; set; }
         public ushort TotalLength { get; set; }

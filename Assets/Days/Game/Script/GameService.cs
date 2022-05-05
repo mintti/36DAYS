@@ -97,7 +97,8 @@ namespace Days.Game.Script
             ObjectInfo info = new ObjectInfo()
             {
                 Index = model.Index,
-                Name = model.Name
+                Name = model.Name,
+                CurrentState = model.CurrentState
             };
             
             // 스텟 설정을 위한 정보 읽기
@@ -121,11 +122,17 @@ namespace Days.Game.Script
 
             return 0;
         }
-        public List<Tuple<ushort, byte>> CreateDungeonEvent(DungeonModel dungeonModel)
+        public List<Tuple<ushort, byte>> CreateDungeonEvent(Dungeon dungeon)
         {
             var events = new List<Tuple<ushort, byte>>();
 
             return events;
         }
+        
+        
+        
+        /*==============================================================
+                                    Artifact
+        ==============================================================*/
     }
 }

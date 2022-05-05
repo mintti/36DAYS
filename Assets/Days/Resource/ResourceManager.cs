@@ -17,6 +17,6 @@ namespace Days.Resource
                                   Dungeon Info
         ==============================================================*/ 
         public static List<ObjectModel> MonsterList { get; set; }
-        public static List<DungeonModel> DungeonList { get; set; }
+        public static List<Dungeon> DungeonList { get; set; }
     }
 }
