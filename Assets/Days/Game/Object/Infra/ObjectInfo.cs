@@ -1,5 +1,7 @@
 ﻿using Days.Data.Script;
 using Days.Game.Background.Infra;
+using Days.Game.Combat.Script;
+using Days.Game.Object.Script;
 using UnityEngine;
 
 namespace Days.Game.Object.Infra
@@ -12,7 +14,16 @@ namespace Days.Game.Object.Infra
         public Character Character { get; set; }
         public Weapon Weapon { get; set; }
 
+        #region 전투 관련 
         public CurrentState CurrentState { get; set; }
+        
+        /// <summary>
+        /// 전투 시, 동작 선택
+        /// </summary>
+        public CombatHandler CombatHandler { get; set; }
+
+        #endregion
+        
         
         public ObjectState ObjectState { get; set; }
 
@@ -31,6 +42,10 @@ namespace Days.Game.Object.Infra
             
         }
 
+        /// <summary>
+        /// (Background) Status Effect 적용
+        /// </summary>
+        /// <param name="statusEffect"></param>
         public void ExecuteStatusEffect(StatusEffect statusEffect)
         {
             CurrentState.ExecuteStatusEffect(statusEffect.CurrentState);
