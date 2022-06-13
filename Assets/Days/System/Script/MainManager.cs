@@ -124,23 +124,27 @@ namespace Days.System.Script
         {
             // ----------- 비동기로 실행할 것 ( Progress Bar / Game Setting )------------
             
-            // 씬 이동 및 화면 UI
-            SceneManager.LoadScene("MainScene");
-            // Progress Bar 실행...
-            
-            
-            // Game setting based on player data.
-            if (!_gameManager.Init((this)))
+            // Init Game Manager
+            if (!_gameManager.InitManager(this))
             {
                 // 다시 메인 화면으로 이동 할 것...
                 return false;
             }
+            
+            // 씬 이동 및 화면 UI
+            SceneManager.LoadScene("MainScene");
+            // Progress Bar 실행...
+            // code.. . 
+
+            
+            // Game setting based on player data.
+            if (!_gameManager.InitData())
+            {
+                // 게임 로드 실패 메인 매세지 설정
+                return false;
+            }
 
             // -----------------------------------------
-            
-            // 게임 시작
-            _gameManager.PreRun();
-            
             return true;
         }
 
@@ -154,7 +158,7 @@ namespace Days.System.Script
         /// </summary>
         public void Save(PlayerData playerData)
         {
-            _dataManager.Save(playerData);
+            _dataManager.WritePlayerData(playerData);
         }
         
 

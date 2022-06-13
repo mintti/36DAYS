@@ -23,7 +23,6 @@ namespace Days.Game.Script
         private UIManager _uiManager;
         private BackgroundManager _backgroundManager;
 
-        public BackgroundManager GetBackgroundManager() => _backgroundManager;
         
         // 복제된 사용자 정보
         private PlayerData _playerData;
@@ -53,8 +52,18 @@ namespace Days.Game.Script
                 _currentGameData = value;
             }
         }
+
+        #region Variable Quick Public Getter
+        public UIManager GetUIManager() => _uiManager;
+        public BackgroundManager GetBackgroundManager() => _backgroundManager;
+
+        #endregion
         
-        public bool Init(MainManager mainManager)
+        /// <summary>
+        /// 초기 값을 설정한다. 해당 객체가 가지는 각 매니저 객체 또한 초기화
+        /// </summary>
+        /// <param name="mainManager"></param>
+        public bool InitManager(MainManager mainManager)
         {
             _mainManager = mainManager;
             _gameService = GetComponentInChildren<GameService>();
@@ -62,43 +71,61 @@ namespace Days.Game.Script
             _uiManager = GetComponentInChildren<UIManager>();
             _backgroundManager = GetComponentInChildren<BackgroundManager>();
             
-            
-            // os 
-            if (!_osManager.ExecuteOsManager(this))
+            // Init OS Manager
+            if (!_osManager.Init(this))
             {
-                Debug.Log("Failed to initialize os.");
+                util.PrintErrorLog("Failed to initialize os.");
             }
-            _osManager.GetScheduler().CreateAlarm("1Tick", Increase, "", 1);
-            _osManager.GetScheduler().CreateAlarm("BG1Tick", _backgroundManager.Increase, "", 1);
-           
-            // ui
-            if (!_uiManager.ExecuteManager(this))
+            else
+            {
+                // 초기화 성공 시, Gama Manager에서 사용할 기본적인 동작 알람을 등록
+                _osManager.GetScheduler().CreateAlarm("1Tick", Increase, "", 1);
+                _osManager.GetScheduler().CreateAlarm("BG1Tick", _backgroundManager.Increase, "", 1);
+            }
+
+            // Init UI Manager
+            if (!_uiManager.Init(this))
             {
                 Debug.Log("Failed to initialize ui.");
             }
             
-            
-            // data
-            PlayerData = _mainManager.GetDataManager().GetPlayerData();
-
-            
-            // Update Default View 
-            _uiManager.UpdatePlayerDataView(_playerData);
-            _uiManager.UpdateGameDataView(_currentGameData);
-            
-            // Background Manager Init
+            // Init Background Manager
             _backgroundManager.Init(this);
 
             Debug.Log("Game Setting Complete.");
             return true;
         }
 
-        
-        
-        #region 게임 구동 관련 
-        
         /// <summary>
-        /// 게임 구동 전 세팅
+        /// 플레이어 데이타 로드 및 화면 설정
+        /// </summary>
+        /// <returns></returns>
+        public bool InitData()
+        {
+            // Main Manager에서 로드됬던 데이타를 설정. (데이타가 없던 경우, 기본 데이타로 로드됨) 
+            _playerData = _mainManager.GetDataManager().GetPlayerData();
+            _playerData ??= _gameService.CreatePlayerData();
+
+            _uiManager.InitView();
+            // Update default views based on data.
+            // _uiManager.UpdatePlayerDataView(_playerData);
+            // _uiManager.UpdateGameDataView(_currentGameData);
+            return true;
+        }
+
+        /// <summary>
+        /// UI Manager 에서 View Setting들이 완료되면 동작 
+        /// </summary>
+        public void CompletedViewSetting()
+        {
+            PreRun();
+        }
+        
+        
+        #region 게임 구동 관련
+
+        /// <summary>
+        /// 게임 구동 전 Game Data 설정
         /// </summary>
         public async void PreRun()
         {

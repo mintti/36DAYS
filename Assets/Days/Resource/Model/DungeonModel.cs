@@ -2,6 +2,9 @@
 
 namespace Days.Resource.Model
 {
+    /// <summary>
+    /// [Resource] 던전이 가지는 정보 
+    /// </summary>
     public abstract class Dungeon
     {
         public byte Index { get; set; }

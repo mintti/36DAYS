@@ -16,7 +16,47 @@ namespace Days.Game.Script
 {
     public class GameService : MonoBehaviour
     {
+        #region 게임 초기 데이타 생성 관련 함수
+        /// <summary>
+        /// 새 Player Data를 생성합니다.
+        /// </summary>
+        public PlayerData CreatePlayerData()
+        {
+            Debug.Log("Creates the player data.");
+            var playerData = new PlayerData()
+            {
+                Day = 0,
+                KeyCode = "...."
+            };
+
+            playerData.DungeonList = GetDungeonList(playerData.KeyCode);
+            
+            Debug.Log("Completed to create the player data.");
+            
+            return playerData;
+        }
         
+        /// <summary>
+        /// 입력된 키코드 기반으로 던전 리스트를 생성
+        /// </summary>
+        private List<DungeonModel> GetDungeonList(string keycode)
+        {
+            var dlist = new List<DungeonModel>();
+
+            // 테스트용
+            for (int i = 0; i < 5; i++)
+            {
+                dlist.Add(new DungeonModel()
+                {
+                    Index = i,
+                    DungeonKey = 0
+                });
+            }
+            
+            return dlist;
+        }
+
+        #endregion
         #region 게임 세팅 관련 함수
         /// <summary>
         /// 게임에서 사용자가 다음 날로 넘어가는 경우, 아래의 내용을 설정하고 저장합니다.
@@ -78,11 +118,18 @@ namespace Days.Game.Script
         /*==============================================================
                                      Game
         ==============================================================*/
+        /// <summary>
+        /// 게임 시간의 하루 도달을 확인
+        /// </summary>
         public bool CheckExpiration(GameData gameData)
         {
             return gameData.Time % gameData.TimeCycle == 0;
         }
         #endregion
+        
+        /// <summary>
+        /// 게임 시간을 초기화
+        /// </summary>
         public GameData InitialData()
         {
             return new GameData() { Time = 0, TimeCycle = 10};

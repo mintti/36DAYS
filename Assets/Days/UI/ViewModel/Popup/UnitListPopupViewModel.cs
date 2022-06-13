@@ -6,7 +6,7 @@ using Days.UI.Script;
 using UnityEngine;
 using util = Days.Util.Script.UtilityService;
 
-namespace Days.UI.ViewModel
+namespace Days.UI.ViewModel.Popup
 {
     public class UnitListPopupViewModel : MonoBehaviour, IPopupViewModel
     {
@@ -18,12 +18,18 @@ namespace Days.UI.ViewModel
         /// </summary>
         public GameObject content;
         
+        /// <summary>
+        /// 첫 게임 씬 로드 시, 플레이어 데이터 주입
+        /// </summary>
         public void Init(PlayerData playerData)
         {
             _playerData = playerData;
             UpdateView();
         }
-
+        
+        /// <summary>
+        /// 플레이어 데이터가 설정 된 이후 팝업 창이 켜질 때마다 화면을 재구성해줌 
+        /// </summary>
         public void OnEnable()
         {
             if (_playerData != null)
@@ -31,7 +37,10 @@ namespace Days.UI.ViewModel
                 UpdateView();
             }
         }
-
+        
+        /// <summary>
+        /// Content GameObject 위치에 유닛정보 오브젝트를 생성해줌.
+        /// </summary>
         public bool UpdateView()
         {
             if (content != null)

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Enemy
   - Building
+  - MapCastle
+  - MapDungeon
+  - MapOther
   layers:
   - Default
   - TransparentFX

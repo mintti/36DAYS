@@ -25,23 +25,13 @@ namespace Days.Game.OS.Script
         
         #endregion
         
-        public bool ExecuteOsManager(GameManager gameManager)
-        {
-            _gameManager = gameManager;
-
-            if (!Init())
-            {
-                util.PrintErrorLog("Failed to initialize os.");
-            }
-
-            return true;
-        }
-        
         /// <summary>
         /// OS 정보 초기화
         /// </summary>
-        private bool Init()
+        public bool Init(GameManager gameManager)
         {
+            _gameManager = gameManager;
+            
             _scheduler = this.GetComponent<Scheduler>();
             _timer = this.GetComponent<Timer>();
             
@@ -49,18 +39,28 @@ namespace Days.Game.OS.Script
             _scheduler.Init(this);
             _timer.Init(this, _scheduler.TimerNotification);
 
-            
-            _scheduler.CreateTask("test", TestFunc);
-            SetSchdulerState(true);
+            Test();
+            SetSchedulerState(true);
             return true;
         }
 
+        #region Test
+        private void Test()
+        {
+            // 일회성 테스크 테스트
+            _scheduler.CreateTask("test", TestFunc);
+        }
         private void TestFunc()
         {
             Debug.Log("Run Test Function!!!!");
         }
+        #endregion
         
-        public void SetSchdulerState(bool isActive)
+        /// <summary>
+        /// 매개변수로 받은 isActive(bool) 값에 따라 Scheduler Coroutine 동작시킴
+        /// </summary>
+        /// <param name="isActive"></param>
+        public void SetSchedulerState(bool isActive)
         {
             if (isActive)
             {

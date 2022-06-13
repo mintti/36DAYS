@@ -71,23 +71,29 @@ namespace Days.Game.Dummy
         private bool _proto03Flag = false;
         public void Proto03_01()
         {
-            if (_proto03Flag)
+            Debug.Log( _proto03Flag ? "Inactive" : "Active" + "Test Effect");
+            _gameManager.GetBackgroundManager().ActiveEffect("artifact/test");
+            _proto03Flag = !_proto03Flag;
+        }
+
+        private bool _proto04Flag = false;
+        /// <summary>
+        /// 랜덤 맵 생성 및 제거
+        /// </summary>
+        public void Proto04_01()
+        {
+            if (_proto04Flag)
             {
-                Debug.Log("Diactive Test Effect");
-                // 비활성화
-                _proto03Flag = false;
-                _gameManager.GetBackgroundManager().ActiveEffect("artifact/test");
-
-
+                
+                
             }
             else
             {
-                Debug.Log("Active Test Effect");
-                // 활성화
-                _proto03Flag = true;
-                _gameManager.GetBackgroundManager().ActiveEffect("artifact/test");
+                
                 
             }
+
+            _proto04Flag = !_proto04Flag;
         }
     }
 }

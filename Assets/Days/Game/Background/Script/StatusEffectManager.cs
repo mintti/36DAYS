@@ -35,6 +35,7 @@ namespace Days.Game.Background.Script
             EffectDelList?.Invoke(effect);
         }
 
+        // TODO : 추후 함수 명 변경하기 (실행하여 존재 여부로 Active/Inactive 시킴)
         public void ActiveEffect(string name)
         {
             var effect = GetResource_Test(name);

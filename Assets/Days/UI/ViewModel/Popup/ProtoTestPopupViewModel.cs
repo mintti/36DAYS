@@ -4,7 +4,7 @@ using Days.Data.Infra;
 using Days.UI.Infra;
 using UnityEngine;
 
-namespace Days.UI.ViewModel
+namespace Days.UI.ViewModel.Popup
 {
     public class ProtoTestPopupViewModel : MonoBehaviour, IPopupViewModel
     {
