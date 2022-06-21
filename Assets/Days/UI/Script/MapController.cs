@@ -48,11 +48,10 @@ namespace Days.UI.Script
         }
 
         #region Map 구성 관련 함수
-
         /// <summary>
         /// Player Data를 읽어 Map을 구성
         /// </summary>
-        public void InitMap(PlayerData playerData)
+        public IEnumerator InitializedMap(PlayerData playerData)
         {
             var dungeonViewModels = new List<DungeonViewModel>();
             var dungeonList = playerData.DungeonList;
@@ -64,7 +63,7 @@ namespace Days.UI.Script
             {
                 var obj = Instantiate(DungeonObjectViewPrefab, DungeonListTransform);
                 dungeonViewModels.Add(obj.GetComponent<DungeonViewModel>());
-                dungeonViewModels.Last().Init();
+                dungeonViewModels.Last().Init(this);
             }
             
             // 첫날인 경우 맵 정보 새로 생성 필요
@@ -74,12 +73,15 @@ namespace Days.UI.Script
                 
                 DungeonListTransform.gameObject.BroadcastMessage("ActiveSimulated");
 
-                Invoke(null, 1);
-                
+                // 5초 대기 후(맵에 흩뿌려진 후) castle과의 거리 계싼
+                yield return new WaitForSeconds(2f);
                 dungeonViewModels.ForEach(dvm => dvm.UpdateDistance());
                 
                 // castle에 가까운 순으로 순서 매김 
-                dungeonViewModels = dungeonViewModels.OrderByDescending(x=>x.Distance).ToList();
+                dungeonViewModels = dungeonViewModels.OrderBy(x=>x.Distance).ToList();
+                
+                // collider 설정 기본 값으로 변경
+                dungeonViewModels.ForEach(x => x.SetDefaultState());
                 
                 // 위 순서대로 던전 난이도 지정 및 좌표 저장
                 for (var index = 0; index < dungeonList.Count; index++)

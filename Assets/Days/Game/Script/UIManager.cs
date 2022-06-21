@@ -11,6 +11,10 @@ namespace Days.Game.Script
 {
     public delegate void GameDel(GameData data);
     public delegate void PlayerDel(PlayerData data);
+    
+    /// <summary>
+    /// 
+    /// </summary>
     public class UIManager : MonoBehaviour
     {
         private GameManager _gameManager;
@@ -25,7 +29,10 @@ namespace Days.Game.Script
         /// Player Data가 업데이트 될 때마다 실행되는 이벤트들
         /// </summary>
         private event PlayerDel PlayerDataEvent;
+        
+        
         private MapController _mapController;
+        private PopupController _popupController;
         #endregion  
 
         #region Method 
@@ -37,7 +44,7 @@ namespace Days.Game.Script
             _gameManager = gameManager;
 
             _mapController = null;
-            
+            _popupController = null;
             return true;
         }
 
@@ -59,6 +66,7 @@ namespace Days.Game.Script
         {
             // 각 컨트롤들이 전부 전달될 때까지 대기
             yield return new WaitUntil(() => _mapController != null);
+            yield return new WaitUntil(() => _popupController != null);
             
             Debug.Log("[UI Manager] Completed setting of ui-related controllers.");
             
@@ -72,19 +80,12 @@ namespace Days.Game.Script
         /// Connect MapController. ViewModel에서 Map Controller가 자신 객체를 직접 전달
         /// </summary>
         public void ConnectMapController(MapController mapController) => _mapController = mapController;
+        public void ConnectPopupController(PopupController popupController) => _popupController = popupController;
 
+        public MapController GetMapController() => _mapController;
+        public PopupController GetPopupController() => _popupController;
 
         #endregion
-        
-        /// <summary>
-        /// Player Data를 기반으로 뷰 설정
-        /// </summary>
-        private void SetView()
-        {
-            var playerData = _gameManager.GetPlayerData();
-            
-            _mapController.InitMap(playerData);
-        }
         #endregion
        
         

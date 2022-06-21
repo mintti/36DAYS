@@ -4,21 +4,28 @@ using Days.Game.Infra;
 using Days.Infra.Interface;
 using Days.Resource.Model;
 using Days.UI.Infra;
+using Days.UI.Script;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Days.UI.ViewModel.Map
 {
-    public class DungeonViewModel : MonoBehaviour, IMapObjectViewModel
+    public class DungeonViewModel : MonoBehaviour
     {
+        private MapController _mapController;
+
+        #region Variable
         private CircleCollider2D _collider;
         private Rigidbody2D _rigidbody;
-
+        
         public int DungeonIndex;
         public float Distance { get; set; }
-        
-        public void Init()
+
+        #endregion        
+        public void Init(MapController mapController)
         {
+            _mapController = mapController;
+            
             _collider = GetComponent<CircleCollider2D>();
             _rigidbody = GetComponent<Rigidbody2D>();
         }
@@ -53,11 +60,25 @@ namespace Days.UI.ViewModel.Map
         {
             _rigidbody.simulated = true;
         }
+        
 
+        /// <summary>
+        /// 성과의 거리를 측정
+        /// </summary>
         public void UpdateDistance()
         {
             var position = transform.position;
             Distance = Math.Abs(position.x) + Math.Abs(position.y);
+        }
+
+        /// <summary>
+        /// Collider 설정 기본 값으로 변경
+        /// </summary>
+        public void SetDefaultState()
+        {
+            var vector = new Vector2(0, 0);
+            _collider.offset = default;
+            _collider.radius = 1;
         }
         
         
@@ -69,6 +90,16 @@ namespace Days.UI.ViewModel.Map
         {
             return transform.position;
         }
+        
+        #endregion
+
+        #region User Behavior
+
+        public void OnMouseUp()
+        {
+            _mapController.SelectedDungeon(DungeonIndex);
+        }
+
         #endregion
     }
 }
