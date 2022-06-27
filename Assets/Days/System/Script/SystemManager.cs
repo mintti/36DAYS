@@ -33,11 +33,6 @@ namespace Days.System.Script
             }
             
             
-            if (!_systemService.InitResourceManager())
-            {
-                util.PrintErrorLog("Failed to initialize resource manager.");
-                return false;
-            }
 
             Debug.Log("System initialization successful.");
             return true;

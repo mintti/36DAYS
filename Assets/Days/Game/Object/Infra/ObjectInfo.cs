@@ -8,7 +8,7 @@ namespace Days.Game.Object.Infra
 {
     public class ObjectInfo
     {
-        public ushort Index { get; set; }
+        public byte Index { get; set; }
         public string Name { get; set; }
         public State State { get; set; }
         public Character Character { get; set; }

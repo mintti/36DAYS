@@ -103,6 +103,9 @@ namespace Days.System.Script
             {
                 return false;
             }
+            
+            // Temp!
+            ResourceManager.Init();
 
             
             // -----------------------------------------

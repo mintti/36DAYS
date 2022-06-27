@@ -17,7 +17,7 @@ namespace Days.Game.Dummy
         // Start is called before the first frame update
         void Start()
         {
-            _gameManager = FindObjectsOfType<GameManager>().First();
+            _gameManager = FindObjectsOfType<GameManager>()?.First();
         }
 
         public void Proto01_01()

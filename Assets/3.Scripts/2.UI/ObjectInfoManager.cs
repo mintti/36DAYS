@@ -2,8 +2,8 @@
 
 *@brief The object information display where Canvas.
 
-*@details ¿ÀºêÁ§Æ®¿¡ ´ëÇÑ Á¤º¸¸¦ Äµ¹ö½º¿¡ Ç¥½ÃÇÕ´Ï´Ù.
-*         ex. Unit/Enemy/Building¿¡ ´ëÇÑ ÀÌ¸§
+*@details ì˜¤ë¸Œì íŠ¸ì— ëŒ€í•œ ì •ë³´ë¥¼ ìº”ë²„ìŠ¤ì— í‘œì‹œí•©ë‹ˆë‹¤.
+*         ex. Unit/Enemy/Buildingì— ëŒ€í•œ ì´ë¦„
 */
 using System.Collections;
 using System.Collections.Generic;

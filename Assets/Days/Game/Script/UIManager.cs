@@ -70,7 +70,9 @@ namespace Days.Game.Script
             
             Debug.Log("[UI Manager] Completed setting of ui-related controllers.");
             
-            SetView();
+            
+            // Player Data를 기반으로 뷰 설정
+            yield return StartCoroutine( _mapController.InitializedMap(_gameManager.GetPlayerData()) );
             
             _gameManager.CompletedViewSetting();
         }

@@ -195,8 +195,8 @@ namespace Days.Game.Script
             // dummy
             _uiManager.UpdateGameDataView(_currentGameData);
             
-            // dummy 03
-            PlayerData.UnitList?.ForEach(x=> Debug.Log($"{x.Name} HP : {x.CurrentState.Hp}"));
+            // dummy 03 아티펙트 초당 체력 회복 1p
+            //PlayerData.UnitList?.ForEach(x=> Debug.Log($"{x.Name} HP : {x.CurrentState.Hp}"));
                 
             // 던전에 들어간 파티 정보 정보 업데이트
             PlayerData.PartyList?.ForEach(x => x.Advance());
@@ -281,7 +281,7 @@ namespace Days.Game.Script
                     
                     unit.ObjectState = ObjectState.WAIT;
                     
-                    Debug.Log($"{unit.Name} state is {unit.State.ToString()}");
+                    Debug.Log($"{unit.Name} state is {unit.ObjectState.ToString()}");
                 }
             }
 

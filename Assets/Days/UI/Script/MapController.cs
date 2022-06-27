@@ -1,10 +1,13 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Days.Data.Infra;
 using Days.Game.Script;
 using Days.UI.Infra;
 using Days.UI.ViewModel.Map;
 using UnityEditor;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 namespace Days.UI.Script
@@ -12,7 +15,8 @@ namespace Days.UI.Script
     public class MapController : MonoBehaviour
     {
         private GameManager _gameManager;
-
+        private UIManager _uiManager;
+        
         #region Dungeon Object Variable
         /// <summary>
         /// Dungeon Object Prefab
@@ -38,11 +42,13 @@ namespace Days.UI.Script
 
             if (_gameManager != null)
             {
+                _uiManager = _gameManager.GetUIManager();
+                    
                 // UI Manager에 Map Controller 연결
                 _gameManager.GetUIManager().ConnectMapController(this);
                 
                 // 관련 오브젝트 수집
-                
+                    
                 // 설정 완료
             }
         }
@@ -103,7 +109,17 @@ namespace Days.UI.Script
             
             // 생성된 Map Obj의 viewmodel 전달
             _dungeonViewModels = dungeonViewModels;
+
+            yield return null;
         }
         #endregion
-    }
+
+        #region Requested Dungeon
+        public void SelectedDungeon(int dungeonIndex)
+        {
+            _uiManager?.GetPopupController().ShowDungeonPopup(dungeonIndex);
+        } 
+        #endregion
+    }   
+    
 }

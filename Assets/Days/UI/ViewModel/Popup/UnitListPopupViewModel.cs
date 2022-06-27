@@ -17,7 +17,8 @@ namespace Days.UI.ViewModel.Popup
         /// 유닛 Scroll Viewer Content
         /// </summary>
         public GameObject content;
-        
+
+        #region IPopupViewModel
         /// <summary>
         /// 첫 게임 씬 로드 시, 플레이어 데이터 주입
         /// </summary>
@@ -26,6 +27,12 @@ namespace Days.UI.ViewModel.Popup
             _playerData = playerData;
             UpdateView();
         }
+        
+        public void ActiveGameObject(object obj)
+        {
+            
+        }
+        #endregion
         
         /// <summary>
         /// 플레이어 데이터가 설정 된 이후 팝업 창이 켜질 때마다 화면을 재구성해줌 

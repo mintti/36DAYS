@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Days.Game.Script;
@@ -8,29 +9,50 @@ using UnityEngine;
 
 namespace Days.UI.Script
 {
+    
     public class PopupController : MonoBehaviour
     {
-        private GameManager _gameManager;
+        private enum Popup : int
+        {
+            UnitListPopup = 0,
+            DungeonInfoPopup,
+            DummyPopup,
+        }
         
-        private List<PopupHandler> _popupViewModels;
+        private UIManager _uiManager;
+        private List<PopupHandler> _popupHandlers;
         
         // Start is called before the first frame update
         void Start()
         {
-            _gameManager = FindObjectsOfType<GameManager>()?.First();
+            var gameManager = FindObjectsOfType<GameManager>()?.First();
             
-            // 팝업 초기화
-            _popupViewModels = FindObjectsOfType<PopupHandler>().ToList();
-
-            if (_gameManager != null)
+            // 팝업 수집 및 하이어라키 배치 순서대로 정렬
+            var handlers = FindObjectsOfType<PopupHandler>();
+            Array.Sort(handlers, (a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
+            _popupHandlers = handlers.ToList();
+            
+            
+            if (gameManager != null)
             {
-                foreach (var pvm in _popupViewModels)
+                _uiManager = gameManager.GetUIManager();
+                _uiManager.ConnectPopupController(this);
+                
+                foreach (var pvm in _popupHandlers)
                 {
                     pvm.gameObject.SetActive(true);
-                    pvm.InitChildren(_gameManager.GetPlayerData());
+                    pvm.InitChildren(gameManager.GetPlayerData());
                     pvm.gameObject.SetActive(false);
                 }
             }
         }
+
+        #region Show Popup
+
+        public void ShowDungeonPopup(int dungeonIndex)
+        {
+            _popupHandlers[(int)Popup.DungeonInfoPopup].PopupActive(dungeonIndex);
+        }
+        #endregion
     }
 }

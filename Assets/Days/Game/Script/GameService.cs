@@ -44,7 +44,7 @@ namespace Days.Game.Script
             var dlist = new List<DungeonModel>();
 
             // 테스트용
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
             {
                 dlist.Add(new DungeonModel()
                 {
