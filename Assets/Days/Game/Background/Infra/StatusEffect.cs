@@ -1,5 +1,6 @@
 ﻿using System;
 using Days.Game.Object.Infra;
+using Days.Game.Object.Infra.Model;
 
 namespace Days.Game.Background.Infra
 {
@@ -28,7 +29,7 @@ namespace Days.Game.Background.Infra
         public int Probability { get; set; }    // 확률
         
         // Sample
-        public CurrentState CurrentState { get; set; }
+        public CurrentStatus CurrentStatus { get; set; }
         
         // Function
 
@@ -39,7 +40,7 @@ namespace Days.Game.Background.Infra
         public void Merge(StatusEffect statusEffect)
         {
             // Merge Status
-            CurrentState.ExecuteStatusEffect(statusEffect.CurrentState);
+            CurrentStatus.ExecuteStatusEffect(statusEffect.CurrentStatus);
             
         }
 
@@ -49,11 +50,11 @@ namespace Days.Game.Background.Infra
         /// <param name="statusEffect"></param>
         public void Disconnect(StatusEffect statusEffect)
         {
-            CurrentState.Hp -= statusEffect.CurrentState.Hp;
-            CurrentState.Mp -= statusEffect.CurrentState.Mp;
-            CurrentState.Stress -= statusEffect.CurrentState.Stress;
-            CurrentState.Gauge -= statusEffect.CurrentState.Gauge;
-            CurrentState.Hunger -= statusEffect.CurrentState.Hunger;
+            CurrentStatus.Hp -= statusEffect.CurrentStatus.Hp;
+            CurrentStatus.Mp -= statusEffect.CurrentStatus.Mp;
+            CurrentStatus.Stress -= statusEffect.CurrentStatus.Stress;
+            CurrentStatus.Gauge -= statusEffect.CurrentStatus.Gauge;
+            CurrentStatus.Hunger -= statusEffect.CurrentStatus.Hunger;
         }
     }
 }

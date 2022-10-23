@@ -6,7 +6,7 @@ using util = Days.Util.Script.UtilityService;
 
 namespace Days.Util.Script
 {
-    public class UtilityService :MonoBehaviour
+    public class UtilityService : MonoBehaviour
     {
         public static void PrintErrorLog(string text)
         {

@@ -71,15 +71,10 @@ namespace Days.Game.OS.Script
                 _scheduler.InactiveSchedule();
             }
         }
-        public void Run()
-        {
-            _timer.Run();
-        }
 
-        public void Stop()
-        {
-            _timer.Stop();
-        }
+        public void Run() => _timer.Run();
+        public void Stop() => _timer.Stop();
+        public void Pause() => _timer.Pause();
 
         public void ExecuteCommand(string command)
         {

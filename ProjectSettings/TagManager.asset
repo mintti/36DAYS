@@ -9,6 +9,7 @@ TagManager:
   - MapCastle
   - MapDungeon
   - MapOther
+  - HierarchyController
   layers:
   - Default
   - TransparentFX
@@ -45,4 +46,22 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: background
+    uniqueID: 4097019761
+    locked: 0
+  - name: field
+    uniqueID: 337662501
+    locked: 0
+  - name: New Layer
+    uniqueID: 1147130853
+    locked: 0
+  - name: New Layer
+    uniqueID: 947090011
+    locked: 0
+  - name: object
+    uniqueID: 3264624165
+    locked: 0
+  - name: UI
+    uniqueID: 1298820511
     locked: 0

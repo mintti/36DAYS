@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using Days.Game.Combat.Infra;
+using Days.Game.Combat.ViewModel;
+using Days.Game.Object.Infra;
+using Days.Game.Object.Infra.Model;
+using Days.Resource.Model;
+using UnityEngine;
+
+namespace Days.Game.Combat.Script
+{
+    public class CombatUnitHandler : CombatEntityHandler
+    {
+        private bool inputAction;
+
+        protected override void Action()
+        {
+            inputAction = false;
+
+            SpinWait.SpinUntil(() => inputAction);
+
+            TurnEnd();
+        }
+
+        private void SelectedSkill()
+        {
+            inputAction = true;
+        }
+
+        public void UseSkill()
+        {
+            
+        }
+        
+        /// <summary>
+        /// 자동 액션
+        /// </summary>
+        public void AutoAction()
+        {
+            
+        }
+    }
+}

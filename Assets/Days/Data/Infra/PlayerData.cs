@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Days.Game.Infra;
 using Days.Game.Object.Infra;
+using Days.Game.Object.Infra.Model;
 using Days.Util.Infra;
 
 namespace Days.Data.Infra
@@ -9,9 +10,9 @@ namespace Days.Data.Infra
     {
         public PlayerData()
         {
-            UnitList = new List<ObjectInfo>();
+            UnitList = new List<UnitInfo>();
             DungeonList = new List<DungeonModel>();
-            PartyList = new List<Party>();
+            PartyList = new List<PartyHandler>();
         }
         /*==============================================================
         Daily Data
@@ -25,13 +26,13 @@ namespace Days.Data.Infra
         [Fixed] Player Data
         ==============================================================*/
 
-        public List<ObjectInfo> UnitList { get; set; }
+        public List<UnitInfo> UnitList { get; set; }
         public List<DungeonModel> DungeonList { get; set; }
 
         /*==============================================================
         Dynamic Player Data
         ==============================================================*/ 
-        public List<Party> PartyList { get; set; }
+        public List<PartyHandler> PartyList { get; set; }
 
         
     }

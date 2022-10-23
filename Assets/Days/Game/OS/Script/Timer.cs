@@ -44,7 +44,7 @@ namespace Days.Game.OS.Script
 
         public void Pause()
         {
-            
+            StopCoroutine("TimerSec");
         }
 
         /// <summary>

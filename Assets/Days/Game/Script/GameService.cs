@@ -1,16 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Days.Data.Infra;
 using Days.Data.Script;
 using UnityEngine;
 
 using Days.Game.Infra;
 using Days.Game.Object.Infra;
+using Days.Game.Object.Infra.Const;
+using Days.Game.Object.Infra.Model;
 using Days.Resource;
 using Days.Resource.Model;
 using Random = System.Random;
 using util = Days.Util.Script.UtilityService;
+using static Days.Resource.ResourceManager;
 
 namespace Days.Game.Script
 {
@@ -139,21 +143,22 @@ namespace Days.Game.Script
                                         UNIT
         ==============================================================*/
 
-        public ObjectInfo ConvertModelToInto(ObjectModel model)
+        public UnitInfo ConvertModelToInto(EntityModel model)
         {
-            ObjectInfo info = new ObjectInfo()
+            UnitInfo info = new UnitInfo()
             {
                 Index = model.Index,
                 Name = model.Name,
-                CurrentState = model.CurrentState
+                CurrentStatus = model.CurrentStatus,
+                Character = GetCharacter(model.ClassIndex)
             };
             
             // 스텟 설정을 위한 정보 읽기
-            var jobInfo = ResourceManager.CharacterList[model.Job];
+            var jobInfo = ResourceManager.GetCharacter(model.ClassIndex);
             
             
             // 값 설정
-            info.State = jobInfo.BaseState;
+            info.Stat = jobInfo.BaseStat;
             
             // other info ref
             // 
@@ -169,14 +174,35 @@ namespace Days.Game.Script
 
             return 0;
         }
-        public List<Tuple<ushort, byte>> CreateDungeonEvent(Dungeon dungeon)
+        public List<PartyEvent> CreateDungeonEvent(Dungeon dungeon)
         {
-            var events = new List<Tuple<ushort, byte>>();
+            var events = new List<PartyEvent>
+            {
+                new PartyEvent(){Point = 10, EventType = PartyEventType.Combat},
+                new PartyEvent(){Point = 10, EventType = PartyEventType.Combat},
+                new PartyEvent(){Point = 10, EventType = PartyEventType.Combat},
+            };
 
             return events;
         }
-        
-        
+
+        /// <summary>
+        /// 던전 전투 이벤트 정보를 생성 및 반환
+        /// </summary>
+        public CombatInfo CreateCombatInfo(PartyHandler party)
+        {
+            var dungeonIdx = party.DungeonIndex;
+            var combatInfo = new CombatInfo()
+            {
+                DungeonIndex = dungeonIdx,
+                PartyInfo = party
+            };
+
+            var monsters = EnemyList.FindAll(x => x.DungeonIndex == dungeonIdx).Select(x=> x.Index);
+            combatInfo.EnemyList = monsters.ToList();
+            
+            return combatInfo;
+        }
         
         /*==============================================================
                                     Artifact

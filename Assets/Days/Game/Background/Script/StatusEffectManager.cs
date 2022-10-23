@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Days.Game.Background.Infra;
 using Days.Game.Object.Infra;
+using Days.Game.Object.Infra.Model;
 using Days.Util.Infra;
 using UnityEditor.Experimental;
 using UnityEngine;
@@ -61,7 +62,7 @@ namespace Days.Game.Background.Script
                     effect.Target = Target.Us;
                     effect.Interval = 1;
                     effect.Probability = 30;
-                    effect.CurrentState = new CurrentState()
+                    effect.CurrentStatus = new CurrentStatus()
                     {
                         Hp = 5
                     };

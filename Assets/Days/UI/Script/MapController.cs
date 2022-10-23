@@ -114,11 +114,24 @@ namespace Days.UI.Script
         }
         #endregion
 
-        #region Requested Dungeon
+        #region Dungeon Event
+        /// <summary>
+        /// 사용자가 던전뷰모델을 선택하면 동작
+        /// </summary>
+        /// <param name="dungeonIndex"></param>
         public void SelectedDungeon(int dungeonIndex)
         {
             _uiManager?.GetPopupController().ShowDungeonPopup(dungeonIndex);
-        } 
+        }
+
+        /// <summary>
+        /// 매개변수로 받은 인덱스에 해당하는 던전의 뷰에 알림을 표시하는 함수 실행
+        /// </summary>
+        public void NotiDungeon(int dungeonIdx)
+        {
+            var index = _dungeonViewModels.FindIndex(x => x.DungeonIndex == dungeonIdx);
+            _dungeonViewModels[index].NotiEvent();
+        }
         #endregion
     }   
     

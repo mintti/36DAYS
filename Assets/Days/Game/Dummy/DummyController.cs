@@ -8,6 +8,8 @@ using Days.Game.Script;
 using Days.Game.Object.Infra;
 using Days.Data.Infra;
 using Days.Data.Script;
+using Days.Game.Object.Infra.Model;
+using Days.Resource;
 
 namespace Days.Game.Dummy
 {
@@ -25,7 +27,7 @@ namespace Days.Game.Dummy
             // UI 생성
             // for (int i = 0; i < 4; i++)
             // {
-            //     _gameManager.CreateUnit(new ObjectInfo()
+            //     _gameManager.CreateUnit(new UnitInfo()
             //     {
             //         Index = (byte)i,
             //         Name = $"Unit{i}",
@@ -50,20 +52,15 @@ namespace Days.Game.Dummy
             // 고용
             for (byte i = 0; i < 4; i++)
             {
-                _gameManager.CreateUnit(new ObjectModel()
+                var entity = new EntityModel()
                 {
                     Index = i,
                     Name = $"Unit{i}",
-                    Job = i,
-                    CurrentState = new CurrentState()
-                    {
-                        Hp = 1,
-                        Mp = 0,
-                        Gauge = 0,
-                        Hunger = 0,
-                        Stress = 0
-                    }
-                });   
+                    ClassIndex = 1 + i,
+                };
+                entity.CurrentStatus = new CurrentStatus(ResourceManager.GetCharacter(1 + i).BaseStat);
+
+                _gameManager.CreateUnit(entity);
             }
         }
 
@@ -82,18 +79,8 @@ namespace Days.Game.Dummy
         /// </summary>
         public void Proto04_01()
         {
-            if (_proto04Flag)
-            {
-                
-                
-            }
-            else
-            {
-                
-                
-            }
-
-            _proto04Flag = !_proto04Flag;
+            
         }
     }
+    
 }

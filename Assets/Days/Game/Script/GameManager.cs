@@ -2,15 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Days.Data.Infra;
 using Days.Data.Script;
 using Days.Game.Background.Script;
+using Days.Game.Combat.Script;
 using Days.Game.Object.Infra;
+using Days.Game.Object.Infra.Const;
+using Days.Game.Object.Infra.Model;
 using Days.Game.OS.Script;
+using Days.Resource;
 using Days.System.Script;
 using UnityEngine;
 using UnityEngine.UI;
-using static Days.Resource.Resource;
 using util = Days.Util.Script.UtilityService;
 
 namespace Days.Game.Script
@@ -23,6 +27,7 @@ namespace Days.Game.Script
         private UIManager _uiManager;
         private BackgroundManager _backgroundManager;
 
+        private CombatController _combatController;
         
         // 복제된 사용자 정보
         private PlayerData _playerData;
@@ -53,10 +58,10 @@ namespace Days.Game.Script
             }
         }
 
-        #region Variable Quick Public Getter
+        #region Variable Quick Public Property
         public UIManager GetUIManager() => _uiManager;
         public BackgroundManager GetBackgroundManager() => _backgroundManager;
-
+        public CombatController SetCombatController(CombatController controller) => _combatController = controller;
         #endregion
         
         /// <summary>
@@ -98,6 +103,7 @@ namespace Days.Game.Script
 
         /// <summary>
         /// 플레이어 데이타 로드 및 화면 설정
+        /// 씬 이동 직후 실행되는 함수
         /// </summary>
         /// <returns></returns>
         public bool InitData()
@@ -110,6 +116,7 @@ namespace Days.Game.Script
             // Update default views based on data.
             // _uiManager.UpdatePlayerDataView(_playerData);
             // _uiManager.UpdateGameDataView(_currentGameData);
+            
             return true;
         }
 
@@ -196,11 +203,11 @@ namespace Days.Game.Script
             _uiManager.UpdateGameDataView(_currentGameData);
             
             // dummy 03 아티펙트 초당 체력 회복 1p
-            //PlayerData.UnitList?.ForEach(x=> Debug.Log($"{x.Name} HP : {x.CurrentState.Hp}"));
+            //PlayerData.UnitList?.ForEach(x=> Debug.Log($"{x.Name} HP : {x.CurrentStatus.Hp}"));
                 
             // 던전에 들어간 파티 정보 정보 업데이트
             PlayerData.PartyList?.ForEach(x => x.Advance());
-            PlayerData.PartyList?.Where(x=>x.State == PartyState.ARRIVAL).ToList().ForEach(x=> ReturnPartyDungeon(x));
+            PlayerData.PartyList?.Where(x=>x.State == PartyState.Arrival).ToList().ForEach(x=> ReturnPartyDungeon(x));
 
             if (_gameService.CheckExpiration(CurrentGameData))
             {
@@ -215,7 +222,7 @@ namespace Days.Game.Script
         /*==============================================================
                                      Unit
         ==============================================================*/ 
-        public void CreateUnit(ObjectModel unitModel)
+        public void CreateUnit(EntityModel unitModel)
         {
             var unit = _gameService.ConvertModelToInto(unitModel);
             PlayerData.UnitList.Add(unit);
@@ -230,17 +237,18 @@ namespace Days.Game.Script
         /// </summary>
         public void SendPartyDungeon(List<byte> unitsIndex, byte dungeonIndex, ushort goalLenght)
         {
+            var events = _gameService.CreateDungeonEvent(ResourceManager.GetDungeon(dungeonIndex)); 
             // 파티 정보를 생성하여 플레이어 데이터에 추가
             PlayerData.PartyList.Add(
-                new Party(this)
+                new PartyHandler(this)
                 {
                     Key = GameService.CreateDungeonKey(),
                     DungeonIndex = dungeonIndex,
                     UnitsIndex = unitsIndex,
-                    Length = 0,
+                    RunningDistance = 0,
                     GoalLength = goalLenght,
-                    State = PartyState.DEFAULT,
-                    //Events = _gameService.CreateDungeonEvent(DungeonResources[dungeonIndex]),
+                    State = PartyState.Default,
+                    Events = events,
                 }
             );
             
@@ -252,19 +260,19 @@ namespace Days.Game.Script
         /// <summary>
         /// 파티가 던전에서 돌아옵니다.
         /// </summary>
-        public void ReturnPartyDungeon(Party party)
+        public void ReturnPartyDungeon(PartyHandler party)
         {
             var state = party.State;
 
             switch(state)
             {
-                case PartyState.ARRIVAL :
+                case PartyState.Arrival :
                     // 보상
                     break;
-                case PartyState.RETREAT :
+                case PartyState.Retreat :
                     // 일부 보상 및 패널티
                     break;
-                case PartyState.DIE:
+                case PartyState.Die:
                     // 죽음
                     break;
             }
@@ -273,7 +281,7 @@ namespace Days.Game.Script
             foreach (var index in party.UnitsIndex)
             {
                 var objStt = PlayerData.UnitList[index].ObjectState;
-                ObjectInfo unit;
+                UnitInfo unit;
                 // IF, 죽은 상태가 아닐때만 업데이트
                 if (objStt != ObjectState.DIE)
                 {
@@ -288,9 +296,34 @@ namespace Days.Game.Script
             PlayerData.PartyList.Remove(party);
         }
 
+        /// <summary>
+        /// 던전에서 발생한 전투 이벤트 처리
+        /// </summary>
+        public void ExecuteCombat(PartyHandler party)
+        {
+            var combatInfo = _gameService.CreateCombatInfo(party);
+            
+            _osManager.Pause();
+            _uiManager.SetCombatView();
+            _combatController.ExecuteCombat(combatInfo);
+        }
+
+        /// <summary>
+        /// 전투 종료 후 결과 반영 및 화면 전환
+        /// </summary>
+        public void EndCombat(string result)
+        {
+            // 결과 반영
+            
+            // 뷰 전환
+            _uiManager.SetDefaultView();
+            
+            // 진행 재개
+            _osManager.Run();
+        }
         #endregion
 
-        #region Event
+        #region Background Event
         /*==============================================================
                                    Artifact
         ==============================================================*/

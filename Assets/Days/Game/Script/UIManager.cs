@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Days.Data.Infra;
+using Days.Game.Infra;
 using UnityEngine;
 using Days.Util.Infra;
 
@@ -33,6 +34,7 @@ namespace Days.Game.Script
         
         private MapController _mapController;
         private PopupController _popupController;
+        private HierarchyController _hierarchyController;
         #endregion  
 
         #region Method 
@@ -45,6 +47,7 @@ namespace Days.Game.Script
 
             _mapController = null;
             _popupController = null;
+            _hierarchyController = null;
             return true;
         }
 
@@ -67,9 +70,12 @@ namespace Days.Game.Script
             // 각 컨트롤들이 전부 전달될 때까지 대기
             yield return new WaitUntil(() => _mapController != null);
             yield return new WaitUntil(() => _popupController != null);
+            yield return new WaitUntil(() => _hierarchyController != null);
             
             Debug.Log("[UI Manager] Completed setting of ui-related controllers.");
             
+            // 초기화가 필요한 컨트롤려의 경우 Init() 실행.
+            _hierarchyController.Init();
             
             // Player Data를 기반으로 뷰 설정
             yield return StartCoroutine( _mapController.InitializedMap(_gameManager.GetPlayerData()) );
@@ -82,11 +88,12 @@ namespace Days.Game.Script
         /// Connect MapController. ViewModel에서 Map Controller가 자신 객체를 직접 전달
         /// </summary>
         public void ConnectMapController(MapController mapController) => _mapController = mapController;
-        public void ConnectPopupController(PopupController popupController) => _popupController = popupController;
-
         public MapController GetMapController() => _mapController;
+        public void ConnectPopupController(PopupController popupController) => _popupController = popupController;
         public PopupController GetPopupController() => _popupController;
-
+        public void ConnectHierarchyController(HierarchyController hierarchyController) =>
+            _hierarchyController = hierarchyController;
+        public HierarchyController GetHierarchyController => _hierarchyController;
         #endregion
         #endregion
        
@@ -123,6 +130,19 @@ namespace Days.Game.Script
         {
             PlayerDataEvent?.Invoke(playerData);
         }
+        #endregion
+
+        #region 상황별 UI 제공을 위한 함수들
+
+        public void SetDefaultView()
+        {
+            _hierarchyController.ChangeView(UIType.Default);
+        }
+        public void SetCombatView()
+        {
+            _hierarchyController.ChangeView(UIType.Combat);
+        }
+
         #endregion
     }
 }

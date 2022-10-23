@@ -14,6 +14,13 @@ namespace Days.UI.ViewModel.Map
     {
         private MapController _mapController;
 
+        #region UI Variable
+        /// <summary>
+        /// 던전에 이벤트가 발생하면 UI에 해당 오브젝트 활성하하여 알림 표시
+        /// </summary>
+        public GameObject NotiObject;
+        #endregion
+        
         #region Variable
         private CircleCollider2D _collider;
         private Rigidbody2D _rigidbody;
@@ -21,6 +28,22 @@ namespace Days.UI.ViewModel.Map
         public int DungeonIndex;
         public float Distance { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool _hasNoti;
+        private bool HasNoti
+        {
+            get { return _hasNoti; }
+            set
+            {
+                _hasNoti = value;
+                if (NotiObject.active != _hasNoti)
+                {
+                    NotiObject.SetActive(value);
+                }
+            }
+        }
         #endregion        
         public void Init(MapController mapController)
         {
@@ -28,6 +51,8 @@ namespace Days.UI.ViewModel.Map
             
             _collider = GetComponent<CircleCollider2D>();
             _rigidbody = GetComponent<Rigidbody2D>();
+
+            HasNoti = false;
         }
 
         /// <summary>
@@ -41,6 +66,14 @@ namespace Days.UI.ViewModel.Map
             }
 
             DungeonIndex = dungeon.Index;
+        }
+        
+        /// <summary>
+        /// 뷰에 이벤트 알림을 표시
+        /// </summary>
+        public void NotiEvent()
+        {
+            HasNoti = true;
         }
 
         #region Create Map

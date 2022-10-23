@@ -1,0 +1,36 @@
+﻿using System;
+using Days.Game.Combat.Infra;
+using Days.Game.Combat.Script;
+using Days.Util.Infra;
+using UnityEngine;
+
+namespace Days.Game.Combat.Enemy
+{
+    /// <summary>
+    /// Enemy의 전투 제어
+    /// </summary>
+    public class CombatEnemyHandler : CombatEntityHandler
+    {
+        private SkillRoutine _skillRoutine;
+
+        public void Init()
+        {
+            _viewModel = GetComponent<CombatEntityViewModel>();
+            
+            // Search = ? 
+            // SkillRoutine = ??
+        }
+
+        protected override void Action()
+        {
+            // PreAction();
+            
+            //_skillRoutine.Execute();
+
+            // PostAction();
+
+            TurnEnd();
+        }
+        
+    }
+}
