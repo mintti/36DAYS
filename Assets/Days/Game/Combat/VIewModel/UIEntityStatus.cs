@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 namespace Days.Game.Combat.ViewModel
 {
+    /// <summary>
+    /// UI에 표시되는 개체의 정보
+    /// </summary>
     public class UIEntityStatus : MonoBehaviour
     {
         #region External Variable
@@ -23,19 +26,31 @@ namespace Days.Game.Combat.ViewModel
             _info = handler.GetCombatInfo();
             _vm = handler.GetViewModel();
             _vm.ConnectedUI(this);
+            UpdateStatus();
         }
 
-        public void UpdatePosition()
+        /// <summary>
+        /// UI 표시 위치를 Entity가 이동한 위치로 변경
+        /// </summary>
+        private void UpdatePosition()
         {
             _rect.position = _vm.GetScreenPosition();
         }
         
+        /// <summary>
+        /// 상태가 변경됨
+        /// </summary>
         public void UpdateStatus()
         {
             UpdatePosition();
+            HpText.text = GetHpText();
+        }
+
+        private string GetHpText()
+        {
             var status = _info.GetCurrentStatus();
             var stat = _info.GetStat();
-            HpText.text = $"{status.Hp.ToString()}/{stat.Hp.ToString()}";
+            return $"{status.Hp.ToString()}/{stat.Hp.ToString()}";
         }
         
         public void Destroy()

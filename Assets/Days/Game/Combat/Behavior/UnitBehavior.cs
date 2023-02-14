@@ -20,7 +20,7 @@ namespace Days.Game.Combat.Behavior
         private ICombatTarget _caster;
         private List<SkillModel> _skillList;
         private Dictionary<byte, CombatAction> _skillActionDict;
-
+        
         public void Init(ICombatTarget caster)
         {
             _caster = caster;
@@ -71,11 +71,12 @@ namespace Days.Game.Combat.Behavior
                 case SelectType.TargetWithinGrid:
                 case SelectType.Target:
                     _skillActionDict[index].Execute(skill, _caster, targets);
+                    TurnEnd();
                     break;
                 default: break;
             }
-
-            _caster.ExecuteTurnEnd();
         }
+        
+        private void TurnEnd() => _caster.ExecuteTurnEnd(); 
     }
 }

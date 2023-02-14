@@ -10,10 +10,11 @@ namespace Days.Resource.Model
 {
     public enum SelectType : byte
     {
+        [Description("대상을 선택하지 않는")]
         None,
-        [Description("범위 내의 적을 대상으로")]
+        [Description("지정된 범위 내의 모든 적을 대상으로")]
         TargetWithinGrid,
-        [Description("범위 내의 적을 대상으로")]
+        [Description("지정된 Area 범위 내 선택한 적을 대상으로")]
         Target
     }
     
@@ -39,6 +40,8 @@ namespace Days.Resource.Model
         
         public List<Grid> Coordinate { get; set; }
 
+        public string Description;
+        
         public SkillModel()
         {
             Coordinate = new List<Grid>();

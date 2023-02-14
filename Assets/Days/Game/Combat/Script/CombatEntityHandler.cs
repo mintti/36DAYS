@@ -38,7 +38,8 @@ namespace Days.Game.Combat.Script
         /// 현재 오브젝트의 상태
         /// </summary>
         public Stack<CombatState> State { get; set; }
-
+            
+        
         public event Del ExecuteAction;
         public event Del PreAction;
         public event Del PostAction;
@@ -116,6 +117,11 @@ namespace Days.Game.Combat.Script
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public void ChangeSelectMode(bool canSelect)
+        {
+            _viewModel.UpdateSelectMode(canSelect);
         }
 
         /// <summary>

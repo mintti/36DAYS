@@ -20,13 +20,7 @@ namespace Days.Game.Object.Infra.Model
             _stat = enemy.BaseStat.Clone() as Stat;
             if (_stat != null)
             {
-                _currentStatus = new CurrentStatus()
-                {
-                    Hp = _stat.Hp,
-                    Mp = 0,
-                    Gauge = 0,
-                    Stress = 0
-                };
+                _currentStatus = new CurrentStatus(_stat);
             }
         }
         

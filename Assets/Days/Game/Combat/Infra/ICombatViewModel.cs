@@ -16,6 +16,12 @@ namespace Days.Game.Combat.Infra
         void SetPosition(Vector3 position);
 
         void UpdateState();
+
+        /// <summary>
+        /// 스킬 사용 가능 대상 여부에 따른 UI 업데이트
+        /// </summary>
+        void UpdateSelectMode(bool canSelect);
+        
         
         Vector3 GetPosition();
         Vector3 GetScreenPosition();

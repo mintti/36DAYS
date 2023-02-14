@@ -5,7 +5,23 @@ namespace Days.Game.Object.Infra.Model
 {
     public class CurrentStatus : ICloneable
     {
-        public ushort Hp { get; set; }
+        private Stat _baseStat { get; }
+
+        private ushort _hp;
+        public ushort Hp
+        {
+            get => _hp;
+            set
+            {
+                _hp = value;
+                
+                // 체력은 상한치를 넘을 수 없음
+                if (_hp > _baseStat.Hp)
+                {
+                    _hp = _baseStat.Hp;
+                }
+            }
+        }
         public ushort Mp { get; set; }
         public byte Stress { get; set; }
         public byte Gauge { get; set; }
@@ -21,11 +37,17 @@ namespace Days.Game.Object.Infra.Model
         /// <param name="stat"></param>
         public CurrentStatus(Stat stat)
         {
+            _baseStat = stat;
+            
             Hp = stat.Hp;
             Power = stat.Power;
             Speed = stat.Speed;
         }
         
+        /// <summary>
+        /// 효과 적용 메서드
+        /// </summary>
+        /// <param name="currentState">전체 효과</param>
         public void ExecuteStatusEffect(CurrentStatus currentState)
         {
             Hp += currentState.Hp;
@@ -45,6 +67,7 @@ namespace Days.Game.Object.Infra.Model
         #region Get State
 
         public ushort GetPower() => Power;
+        
         
         #endregion
     }

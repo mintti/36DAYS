@@ -101,44 +101,43 @@ namespace Days.Game.Combat.Script
         {
             ICombatTarget caster = _combatController.GetCurrentEntity();
             List<ICombatTarget> targets = new List<ICombatTarget>();
-            SelectMode = true;
             
-            
-            _selectedCount = 0;
-            
-            // 사용 가능 대상 표시
-            switch (skill.SelectType)
+            if (skill.SelectType == SelectType.Target)                      // 범위 내에서 대상을 선택해야하는 스킬
             {
-                case SelectType.TargetWithinGrid:
-                    _selectedGridList = _changedFieldStack.ToList();
-                    break;
-                case SelectType.Target:
-                    // 선택 가능 대상 표시
-                    _selectedGridList = new List<Grid>();
-                    break;
-                default:
-                    break;
+                // 초기화 및 대상 선택 모드로 변경
+                _selectedGridList = new List<Grid>();
+                _selectedCount = 0; 
+                SelectMode = true;
+                _combatController.CombatViewModel.ChangeSelectMode(SelectMode);
+                
+                // 선택 가능한 대상을 화면에 표시
+                foreach (var grid in _changedFieldStack)
+                {
+                    ICombatTarget target = _fieldInfo[grid.x, grid.y].OnEntity;
+                    target.ChangeSelectMode(true);
+                }
+                
+                // 지정된 카운트만큼 대기
+                var waitUntil = new WaitUntil(() => (_selectedCount < skill.TargetCount));
+                     
+                // 스킬 사용
+                caster.GetBehavior().Execute(skill, targets);
             }
-            
-            // 지정된 카운트만큼 대기
-            var waitUntil = new WaitUntil(() => (_selectedCount < skill.TargetCount));
-
-            
-            // 대상을 구하는 경우
-            switch (skill.SelectType)
+            else if (skill.SelectType == SelectType.TargetWithinGrid)       // 범위 내 포함되는 전체 대상을 하는 스킬
             {
-                 case SelectType.Target :
-                 case SelectType.TargetWithinGrid :
-                     // 영역 내 모든 엔티티의 정보를 전달
-                     foreach (var grid in _selectedGridList)
-                     {
-                         ICombatTarget target = _fieldInfo[grid.x, grid.y].OnEntity;
-                         if(target != null)
-                             targets.Add(target);
-                     };
-                     caster.GetBehavior().Execute(skill, targets);
-                 break;
-             
+                // 스킬 사용할 대상 화면에 표시
+                _selectedGridList = _changedFieldStack.ToList();
+                
+                // 영역 내 모든 엔티티의 정보를 전달
+                foreach (var grid in _selectedGridList)
+                {
+                    ICombatTarget target = _fieldInfo[grid.x, grid.y].OnEntity;
+                    if(target != null)
+                        targets.Add(target);
+                };
+                
+                // 스킬 사용
+                caster.GetBehavior().Execute(skill, targets);
             }
             
             // 표시한 사용 가능 대상 제거
@@ -180,6 +179,23 @@ namespace Days.Game.Combat.Script
             if (SelectMode)
             {
                 ClearField();
+            }
+        }
+
+        /// <summary>
+        /// 스킬 대상 설정 중 선택 취소하여 스킬 사용이 중단됨
+        /// </summary>
+        public void StopSelectMode()
+        {
+            if (SelectMode)
+            {
+                StopCoroutine(WaitSelectCombatAction(_skilltemp));
+                // 선택 가능한 대상을 화면에 표시
+                foreach (var grid in _changedFieldStack)
+                {
+                    ICombatTarget target = _fieldInfo[grid.x, grid.y].OnEntity;
+                    target.ChangeSelectMode(false);
+                }
             }
         }
         #endregion

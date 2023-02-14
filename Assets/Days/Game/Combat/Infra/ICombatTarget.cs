@@ -19,7 +19,9 @@ namespace Days.Game.Combat.Infra
 
         ICombatBehavior GetBehavior();
         void ExecuteTurnEnd();
-        
+
+        void ChangeSelectMode(bool canSelect);
+
         // Action
         void Move(Grid grid);
         void Hit();

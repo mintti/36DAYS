@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using Days.Game.Combat.Script;
 using Days.Game.Object.Infra.Model;
 using Days.Resource.Model;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Days.Game.Combat.ViewModel
 {
@@ -14,18 +17,28 @@ namespace Days.Game.Combat.ViewModel
     public class CombatViewModel : MonoBehaviour
     {
         #region External Varaibles
-        public GameObject SkillListObject;
+        public GameObject UnitActionObj;
         public Transform EntityStatusListTransform;
         public GameObject EntityStatusObjectPrefab;
-        
         #endregion
-
+        
         private int currentEntityIndex;
         private CombatController _combatController;
         private FieldController _fieldController;
         
+        // Entity 상태 표시 변수
         private Dictionary<int, List<SkillModel>> _skillBufferDict; // 스킬 버퍼
         private Dictionary<int, UIEntityStatus> _ettSttVMDict;   // 엔티티별 스탯
+        
+        // 선택 모드 UI
+        public GameObject SelectModePanelObj;
+        public Text selectCounterText;
+        public int selectedCnt;
+        public int totalSelectCnt;
+        
+        /// <summary>
+        /// 초기화
+        /// </summary>
         public void Init(CombatController combatController, List<CombatEntityHandler> list)
         {
             _combatController = combatController;
@@ -35,6 +48,10 @@ namespace Days.Game.Combat.ViewModel
             _skillBufferDict ??= new Dictionary<int, List<SkillModel>>();
             _ettSttVMDict ??= new Dictionary<int, UIEntityStatus>();
             
+            // 화면 초기화
+            SelectModePanelObj.SetActive(false);
+            
+            // 엔티티 초기화
             foreach (var handler in list)
             {
                 int index = handler.GetIndex();
@@ -112,6 +129,37 @@ namespace Days.Game.Combat.ViewModel
         public void MouseExitActionEvent()
         {
             _fieldController.ClearField();
+        }
+
+        /// <summary>
+        /// 매개 변수 값에 따른 스킬 대상 선택 모드 화면 전환
+        /// </summary>
+        public void ChangeSelectMode(bool isSelectMode)
+        {
+            UnitActionObj.SetActive(!isSelectMode);
+            SelectModePanelObj.SetActive(isSelectMode);
+
+            if (isSelectMode)
+            {
+                // 선택 가능한 유닛들만 활성화 되도록 업데이트
+                
+                // 화면 업데이트
+                UpdateSelectCount();   
+            }
+            else
+            {
+                _fieldController.StopSelectMode();
+                
+                // 초기화
+                selectCounterText.text = string.Empty;
+                selectedCnt = 0;
+                totalSelectCnt = 0;
+            }
+        }
+        
+        public void UpdateSelectCount()
+        {
+            selectCounterText.text = $"{selectedCnt}/{totalSelectCnt}";
         }
         #endregion
 

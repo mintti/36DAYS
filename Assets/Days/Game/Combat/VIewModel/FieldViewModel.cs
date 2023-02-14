@@ -37,6 +37,7 @@ namespace Days.Game.Combat.ViewModel
         {
             _fieldController.SelectedEvent(this);
         }
+        
         #endregion
 
         #region Field Type Change
@@ -51,7 +52,7 @@ namespace Days.Game.Combat.ViewModel
                     _renderer.color = Color.white;
                     break;
                 case FieldType.Select :
-                    _renderer.color = Color.green;
+                    _renderer.color = Color.yellow;
                     break;
                 default:
                     break;

@@ -15,6 +15,7 @@ namespace Days.Game.Combat.Infra
         #region External Variable
         public GameObject TurnFlag;
         public Text Hp;
+        public GameObject CanSelectTargetObject;
         #endregion
 
         private UIEntityStatus _ui;
@@ -28,6 +29,7 @@ namespace Days.Game.Combat.Infra
             _handler = handler;
             _objectInfo = combatInfo;
             TurnFlag.SetActive(false);
+            CanSelectTargetObject.SetActive(false);
 
             GetComponent<SpriteRenderer>().color = _handler.GetEntityType() == EntityType.Unit ? Color.green : Color.magenta ;
         }
@@ -42,7 +44,7 @@ namespace Days.Game.Combat.Infra
         {
             transform.localPosition = position;
         }
-
+ 
         public Vector3 GetPosition()
         {
             return transform.localPosition;
@@ -60,16 +62,7 @@ namespace Days.Game.Combat.Infra
         
         #endregion
 
-        #region user input event
-
-        private void OnMouseUp()
-        {
-            //_handler.ClickedEvent();
-        }
-
-        #endregion
-
-        #region State
+        #region 엔티티 상태에 따른 뷰 변경
 
         public void TurnStart()
         {
@@ -88,7 +81,11 @@ namespace Days.Game.Combat.Infra
         {
             _ui.UpdateStatus();
         }
-        
+    
+        public void UpdateSelectMode(bool canSelect)
+        {
+            CanSelectTargetObject.SetActive(canSelect);
+        }
 
         #endregion
     }

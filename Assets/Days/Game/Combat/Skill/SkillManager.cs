@@ -7,6 +7,12 @@ namespace Days.Game.Combat.Skill
 {
     public static class SkillManager
     {
+        /// <summary>
+        /// 스킬 정보를 입력 받아, 해당하는 Combat Action을 가지는 스킬 클래스를 반환합니다.
+        /// </summary>
+        /// <param name="classIndex"></param>
+        /// <param name="skillIndex"></param>
+        /// <returns></returns>
         public static CombatAction GetSkill(byte classIndex, byte skillIndex)
         {
             var skill = ResourceManager.GetSkill(classIndex, skillIndex);
